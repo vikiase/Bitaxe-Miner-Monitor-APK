@@ -4,13 +4,22 @@ const PORT = 3000;
 app.use(express.json());
 const axios = require('axios');
 const utils = require('./utils');
+const { spawn } = require('child_process');
 
 
-let minerIpAddress = '---'; // Replace with your miner's IP address
+let minerIpAddress = '-';
 
 app.get('/', (req, res) => {
     res.send(true);
 });
+
+app.post('/start-log', (req, res) => {
+    // Start the logging script
+}
+
+app.post('/end-log', (req, res) => {
+    // End the logging script
+}
 
 app.get('/info', async (req, res) => {
     try {
@@ -20,7 +29,7 @@ app.get('/info', async (req, res) => {
             'voltage': utils.roundNumber(Number(data.voltage)/1000),
             'temperature': utils.roundNumber(data.temp),
             'vrTemperature': utils.roundNumber(data.vrTemp),
-            'hashrate': utils.roundNumber(data.hashrate),
+            'hashrate': utils.roundNumber(data.hashRate),
             'bestDiff': data.bestDiff,
             'bestSessionDiff': data.bestSessionDiff,
             'isUsingFallbackStratum': data.isUsingFallbackStratum,
@@ -57,7 +66,6 @@ app.get('/info', async (req, res) => {
         };
         res.json(response);
         }
-
     catch (err) {
         console.error('Error fetching miner info:', err.message);
         res.status(500).json({ error: 'Failed to fetch miner info' });

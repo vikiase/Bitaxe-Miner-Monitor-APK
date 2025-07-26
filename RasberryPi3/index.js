@@ -4,22 +4,56 @@ const PORT = 3000;
 app.use(express.json());
 const axios = require('axios');
 const utils = require('./utils');
+require('dotenv').config();
+
+
 const { spawn } = require('child_process');
+let loggingProcess = null;
 
-
-let minerIpAddress = '-';
+let minerIpAddress = process.env.MINER_IP_ADDRESS;
 
 app.get('/', (req, res) => {
     res.send(true);
 });
 
 app.post('/start-log', (req, res) => {
-    // Start the logging script
-}
+    if (loggingProcess) {
+        return res.status(400).json({ error: 'Logging script already running' });
+    }
+
+    try {
+        loggingProcess = spawn('node', ['loggingScript.js'], {
+            stdio: 'inherit',
+        });
+
+        loggingProcess.on('exit', (code, signal) => {
+            console.log(`Logging script exited with code ${code}, signal ${signal}`);
+            loggingProcess = null;
+        });
+
+        console.log('Logging script started');
+        res.json({ message: 'Logging script started successfully' });
+    } catch (err) {
+        console.error('Error starting logging script:', err.message);
+        res.status(500).json({ error: 'Failed to start logging script' });
+    }
+});
 
 app.post('/end-log', (req, res) => {
-    // End the logging script
-}
+    if (!loggingProcess) {
+        return res.status(400).json({ error: 'Logging script is not running' });
+    }
+
+    try {
+        loggingProcess.kill('SIGTERM');
+        console.log('Logging script stopped');
+        res.json({ message: 'Logging script stopped successfully' });
+    } catch (err) {
+        console.error('Error stopping logging script:', err.message);
+        res.status(500).json({ error: 'Failed to stop logging script' });
+    }
+});
+
 
 app.get('/info', async (req, res) => {
     try {
@@ -91,6 +125,29 @@ app.get('/asic-options', async (req, res) => {
     }
 });
 
+app.get('/graph-data-year', async (req, res) => {
+    try {
+        hashrateData = await utils.getData('hashrate');
+        powerData = await utils.getData('power');
+        coreVoltageActualData = await utils.getData('coreVoltageActual');
+        fanRPMData = await utils.getData('fanRPM');
+        temperatureData = await utils.getData('temperature');
+        const response = {
+            hashrate: hashrateData,
+            power: powerData,
+            coreVoltageActual: coreVoltageActualData,
+            fanRPM: fanRPMData,
+            temperature: temperatureData
+        };
+        res.json(response);
+    }
+    catch (err) {
+        console.error('Error fetching graph data:', err.message);
+        res.status(500).json({ error: 'Failed to fetch graph data' });
+    }
+
+});
+
 app.post('/restart', async (req, res) => {
     try {
         const response = await axios.post(`http://${minerIpAddress}/api/system/restart`);
@@ -101,6 +158,31 @@ app.post('/restart', async (req, res) => {
     }
 });
 
+app.patch('/patch-miner', async (req, res) => {
+    const { coreVoltage, frequency } = req.body;
+
+    const body = {};
+    if (coreVoltage !== undefined && coreVoltage !== '') body.coreVoltage = String(coreVoltage);
+    if (frequency !== undefined && frequency !== '') body.frequency = String(frequency);
+
+    if (Object.keys(body).length === 0) {
+        return res.status(400).json({ error: 'No valid parameters provided' });
+    }
+
+    try {
+        const response = await axios.patch(
+            `http://${minerIpAddress}/api/system`,
+            body,
+            {
+                headers: { 'Content-Type': 'application/json' }
+            }
+        );
+        res.json({ message: 'ASIC settings updated', response: response.data });
+    } catch (err) {
+        console.error('Failed to update ASIC settings:', err.message);
+        res.status(500).json({ error: 'Failed to update ASIC settings' });
+    }
+});
 
 app.listen(PORT, () => {
     console.log(`Server is running at http://localhost:${PORT}`);

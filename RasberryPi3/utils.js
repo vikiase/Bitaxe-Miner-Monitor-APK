@@ -1,5 +1,7 @@
 const axios = require("axios");
 const { InfluxDB } = require('@influxdata/influxdb-client');
+require('dotenv').config();
+
 
 function roundNumber(num) {
     const rounded = Math.round(num * 100) / 100;
@@ -28,13 +30,14 @@ async function getMinerAsic(minerIpAddress) {
     }
 }
 
-const url = 'http://localhost:8086';
-const token = '-';
-const org = 'aa';
-const bucket = 'aaa';
+const url = process.env.DB_URL;
+const token = process.env.DB_TOKEN;
+const org = process.env.DB_ORG;
+const bucket = process.env.DB_BUCKET;
 
 const influxDB = new InfluxDB({ url, token });
-async function getData(value, range = '-24h', ) {
+async function getData(value) {
+    let range = '-1y';
     try {
         const queryApi = influxDB.getQueryApi(org);
 

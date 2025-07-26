@@ -1,17 +1,19 @@
 const express = require('express');
 const utils = require('./utils');
 const { InfluxDB, Point } = require('@influxdata/influxdb-client');
+require('dotenv').config();
+
 
 const app = express();
 app.use(express.json());
 
-const org = 'aa';
-const bucket = 'aaa'
-const token = '-'
-const client = new InfluxDB({ url: 'http://localhost:8086', token })
+const org = process.env.DB_ORG;
+const bucket = process.env.DB_BUCKET
+const token = process.env.DB_TOKEN;
+const client = new InfluxDB({ url: process.env.DB_URL, token })
 
 
-let minerIpAddress = '-';
+let minerIpAddress = process.env.MINER_IP_ADDRESS;
 
 async function getMinerData(minerIpAddress) {
     try {
@@ -58,7 +60,7 @@ async function startLogging() {
         if (data) {
             await saveData(data);
         }
-        await new Promise(resolve => setTimeout(resolve, 60 * 1000)); // čekej 1 minutu
+        await new Promise(resolve => setTimeout(resolve, 30 * 1000)); // čekej 30s
     }
 }
 

@@ -6,18 +6,6 @@ This project is a Node.js-based application designed to monitor and manage a Bit
 
 ---
 
-## Tech Stack
-
-- **Programming Language**: JavaScript
-- **Runtime**: Node.js
-- **Frameworks**: 
-  - Express.js (for building the REST API)
-- **Database**: InfluxDB (time-series database for storing miner metrics)
-- **HTTP Client**: Axios (for making HTTP requests to the miner)
-- **Environment Variables**: dotenv (for managing sensitive configuration)
-- **Process Management**: Node.js `child_process` module (for running background scripts)
-
----
 
 ## Workflow
 
@@ -63,6 +51,7 @@ This project is a Node.js-based application designed to monitor and manage a Bit
 
 2. **Infinite Loop**:
    - Runs an infinite loop with a 30-second delay between data fetches.
+   - It is ran or stopped by `POST /start-log` and `POST /end-log` endpoints.
 
 ---
 

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miner Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<header>
+    <h1>Miner Dashboard</h1>
+</header>
+
+<div class="container">
+    <div class="controls">
+        <button id="startLogBtn">Start Logging</button>
+        <button id="endLogBtn">Stop Logging</button>
+        <button id="restartBtn">Restart Miner</button>
+    </div>
+
+    <div class="miner-info">
+        <h2>Miner Info</h2>
+        <div id="minerData"></div>
+    </div>
+
+    <div class="asic-settings">
+        <h2>ASIC Settings</h2>
+        <div id="asicOptions"></div>
+    </div>
+
+    <div class="graph-container">
+        <h2>Performance Graph</h2>
+        <canvas id="performanceGraph"></canvas>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #282c34, #1f2024);
+    color: #fff;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2rem;
+    color: #FF6F00;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 100%;
+    width: 100%;
+    align-items: center;
+}
+
+.controls {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    width: 100%;
+    max-width: 400px;
+}
+
+button {
+    background-color: #FF6F00;
+    color: #fff;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    max-width: 150px;
+}
+
+button:hover {
+    background-color: #ff5e00;
+}
+
+button:active {
+    background-color: #e64a00;
+}
+
+.miner-info, .asic-settings {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+}
+
+h2 {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+    color: #FF6F00;
+    text-transform: uppercase;
+}
+
+#minerData, #asicOptions {
+    font-size: 1rem;
+    color: #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#minerData div, #asicOptions div {
+    font-size: 1.2rem;
+}
+
+.graph-container {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+}
+
+canvas {
+    width: 100%;
+    height: 300px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 1.6rem;
+    }
+
+    .controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    button {
+        width: 100%;
+        max-width: 300px;
+        padding: 12px;
+    }
+
+    .container {
+        gap: 20px;
+    }
+
+    .miner-info, .asic-settings, .graph-container {
+        padding: 15px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    h2 {
+        font-size: 1.4rem;
+    }
+
+    #minerData, #asicOptions {
+        font-size: 1.1rem;
+    }
+}
